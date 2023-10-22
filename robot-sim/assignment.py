@@ -16,7 +16,15 @@ first_iteration_condition = False
 """ condition for the first iteration to find the centre of the arena """
 
 token_array = []
-""" array with token offsets """
+""" array with token offsets yet to move. 
+The first element will be the token put in the centre first, 
+that will be a reference for the other movements of the robot"""
+
+token_array_moved = []
+""" array with token offsets that were alredy moved in the arena"""
+
+radius = 0
+""" integer that will be modifed in the first iteration with the radius of the arena"""
 
 
 def drive(speed, seconds):
@@ -73,6 +81,27 @@ def find_token():
         return -1, -1
     else:
         return dist, rot_y
+        
+def find_token_from_list(array):
+    """
+    Function to find the closest token in a list of offsets
+
+    Returns:
+	dist (float): distance of the closest token (-1 if no token is detected)
+	rot_y (float): angle between the robot and the token (-1 if no token is detected)
+    """
+    dist=100
+    for token in R.see():
+    	for i in range(1,len(array)-1): #1 because the first is the reference, could CHANGE
+    		if token.info.offset == array[i]:
+    			if token.dist < dist:
+            			dist=token.dist
+	    			rot_y=token.rot_y
+	    			break
+    if dist==100:
+        return -1, -1
+    else:
+        return dist, rot_y
 
 def find_that_token(m):
     """
@@ -83,14 +112,15 @@ def find_that_token(m):
 	rot_y (float): angle between the robot and the token (-1 if no token is detected)
     """
     dist=100
-    for token in R.see():
-    	if(token.info.offset == m):
-            dist=token.dist
-	    rot_y=token.rot_y
-    if dist==100:
-        return -1, -1
-    else:
-        return dist, rot_y
+    while dist == 100:
+    	for token in R.see():
+    		if(token.info.offset == m):
+            		dist=token.dist
+	    		rot_y=token.rot_y
+    	if dist==100:
+        	turn(5,0.5)
+    
+    return dist, rot_y
 def min_dist():
 	markers = R.see()
 	min_dist = 100;
@@ -148,6 +178,7 @@ def first_iteration():
 			token_array.pop(i)
 	token_array.insert(0, dist_min[1])
 	print(token_array)
+	global radius
 	radius = diameter/2.0
 	param = diameter
 	while(param > radius):
@@ -155,10 +186,9 @@ def first_iteration():
 		dist_min = min_dist()
 		param = param-dist_min[0]
 		drive(10,0.3)
-	R.release()
 def main():
-		
 	markers = R.see()
+	time = 0
 	#for m in markers:
 		#rot_y = m.centre.polar.rot_y
 		#print(str(rot_y))
@@ -167,7 +197,10 @@ def main():
         #	elif m.info.marker_type == MARKER_ARENA:
         #		print(" - Arena marker {0} is {1} metres away".format( m.info.offset, m.dist ))
 	while 1:
+	    #if time == 0:
 	    dist, rot_y = find_token()
+	    	
+	    #	dist, rot_y = find_token_from_list(token_array)
 	    if dist==-1:
 		print("I don't see any token!!")
 		exit()  # if no markers are detected, the program ends
@@ -175,11 +208,29 @@ def main():
 		print("Found it!")
 		R.grab() # if we are close to the token, we grab it.
 		# FIRST ITERATION ONLY:
-		first_iteration()
-		print("Gotcha!")
-		
-		drive(-20,2)
-		
+		global radius
+		if time == 0:
+			first_iteration()
+			time = 1
+		else:
+			global token_array
+			dist, rot_y = find_that_token(token_array[0])
+			trashold = 0.6
+			while(dist > trashold):
+				drive(10,0.3)
+				dist, rot_y = find_that_token(token_array[0])
+				print(str(dist)+ " with token " +str(token_array[0]) )
+				
+		R.release()
+		drive(-20,1)
+		delta = 10.0
+		turn(-20, 2)
+		dist, rot_y = find_token()
+		#while dist < radius:
+		#	turn(5,1)
+		#	print(rot_y)
+		#	dist, rot_y = find_token()
+			
 	    elif -a_th<= rot_y <= a_th: # if the robot is well aligned with the token, we go forward
 		print("Ah, here we are!.")
 		drive(10, 0.5)
