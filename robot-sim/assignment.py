@@ -58,8 +58,8 @@ def update_token_array(m):
     Function to update the array "token_array"
     """
     global token_array
-    if not(m.info.offset in token_array):
-    	token_array.append(m.info.offset)
+    if(m not in token_array):
+    	token_array.append(m)
     
 	
 	
@@ -138,36 +138,62 @@ def max_dist():
 			max_dist = m.dist
 			index = m.info.offset
 	return max_dist, index
+	
+def diam_dist():
+	array_all_token = []
+	array_dist = []
+	global token_array
+	temp = True
+	first = True
+	markers = R.see()
+	while(temp):
+		turn(10,0.3)
+		if(markers != R.see):
+			markers = R.see()
+			for m in markers:
+				if(m.info.offset in array_all_token and first):
+					first = False
+					dist, index = min_dist()
+				if(len(array_all_token) == len(token_array)):
+					temp = False
+					print("FINALLL")
+				if(m.info.offset not in array_all_token):
+					array_all_token.append(m.info.offset)
+					array_dist.append(m.dist)
+					update_token_array(m.info.offset)
+				
+			print(array_all_token)
+	i = array_dist.index(max(array_dist))
+	print(str(max(array_dist))+" "+ str(array_all_token[i]))
+	return max(array_dist), array_all_token[i]
+			
+		
+	
+	
 def first_iteration():
 	global first_iteration_condition
 	while not first_iteration_condition:
-		turn(-5, 0.5)
-		dist, index = max_dist();
-		result = "The dist is : " + str(dist) 
-		print(result)
-		# Can I assume to know this? It is only for the first iteration
-		# to find the centre of the arena.
-		if(dist > 5.0):
-			markers = R.see()
-			for m in markers:
-				update_token_array(m)
-				if(dist-d_th<m.dist<dist+d_th):
-					rot_y = m.centre.polar.rot_y
-					while rot_y > a_th:
-						if rot_y < -a_th: 
-							print("Left a bit...")
-							turn(-2, 0.5)
-	    					elif rot_y > a_th:
-							print("Right a bit...")
-							turn(+2, 0.5)
-						print(rot_y)
-						dist, rot_y = find_that_token(m.info.offset)
-						if -a_th<rot_y < a_th:
-							print("Offset "+str(m.info.offset))
-							first_iteration_condition = True
-							break
+		dist, indexD = diam_dist()
+		find_that_token(indexD)
+		markers = R.see()
+		for m in markers:
+			update_token_array(m)
+			if(dist-d_th<m.dist<dist+d_th):
+				rot_y = m.centre.polar.rot_y
+				while rot_y > a_th:
+					if rot_y < -a_th: 
+						print("Left a bit...")
+						turn(-2, 0.5)
+	    				elif rot_y > a_th:
+						print("Right a bit...")
+						turn(+2, 0.5)
+					print(rot_y)
+					dist, rot_y = find_that_token(m.info.offset)
+					if -a_th<rot_y < a_th:
+						print("Offset "+str(m.info.offset))
+						first_iteration_condition = True
+						break
 	global token_array
-	print(str(token_array))
 	dist_max = max_dist()
 	dist_min = min_dist()
 	diameter = dist_max[0]-dist_min[0]
@@ -182,13 +208,15 @@ def first_iteration():
 	radius = diameter/2.0
 	param = diameter
 	while(param > radius):
-		param, rot_y = find_that_token(8)
+		param, rot_y = find_that_token(indexD)
 		dist_min = min_dist()
 		param = param-dist_min[0]
 		drive(10,0.3)
 def main():
 	markers = R.see()
+	global token_array
 	time = 0
+	while_condition = 0
 	#for m in markers:
 		#rot_y = m.centre.polar.rot_y
 		#print(str(rot_y))
@@ -199,7 +227,24 @@ def main():
 	while 1:
 	    #if time == 0:
 	    dist, rot_y = find_token()
-	    	
+	    while (R.see() and while_condition == 0):
+	    	marker = R.see()
+		for m in markers:
+			if(m.info.offset not in token_array):
+		    		update_token_array(m.info.offset)
+	    	turn(-10,1)
+	    if(while_condition == 0):
+	    	turn(10,1)
+	    while(R.see() and while_condition == 0):
+	    	marker = R.see()
+		for m in markers:
+			if(m.info.offset not in token_array):
+		    		update_token_array(m.info.offset)
+	    	turn(10,1)
+	    while((not R.see()) and while_condition == 0):
+	    	print(str(R.see()))
+	    	turn(30,1)
+	    while_condition = 1
 	    #	dist, rot_y = find_token_from_list(token_array)
 	    if dist==-1:
 		print("I don't see any token!!")
@@ -213,7 +258,6 @@ def main():
 			first_iteration()
 			time = 1
 		else:
-			global token_array
 			dist, rot_y = find_that_token(token_array[0])
 			trashold = 0.6
 			while(dist > trashold):
