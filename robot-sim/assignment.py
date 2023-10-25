@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import time
+import timeit
 from sr.robot import *
 
 a_th = 2.0
@@ -215,8 +216,10 @@ def first_iteration():
 def main():
 	markers = R.see()
 	global token_array
-	time = 0
+	istance = 0
 	while_condition = 0
+	second_iteration = 0
+	avg = 0
 	#for m in markers:
 		#rot_y = m.centre.polar.rot_y
 		#print(str(rot_y))
@@ -254,9 +257,9 @@ def main():
 		R.grab() # if we are close to the token, we grab it.
 		# FIRST ITERATION ONLY:
 		global radius
-		if time == 0:
+		if istance == 0:
 			first_iteration()
-			time = 1
+			istance = 1
 		else:
 			dist, rot_y = find_that_token(token_array[0])
 			trashold = 0.6
@@ -267,8 +270,27 @@ def main():
 				
 		R.release()
 		drive(-20,1)
-		delta = 10.0
-		turn(-20, 2)
+		if(second_iteration == 1):
+			turn(-10,avg)
+			print(str(avg))
+			while(not R.see()):
+				turn(10,0.2)
+		if(second_iteration == 0):
+			start_time = time.time()
+			while(R.see() and second_iteration == 0):
+				turn(-10,1)
+			end_time = time.time()
+			turn(10,1)
+			avg = end_time-start_time-0.3
+			# This is the time spent in the while loop - a thrashold
+			# This is done cause we have to not consider the check in the while but just the turning
+			# Even if we assume a time = 0 to check the condition of the while loop, the time calculated
+			# is given for going further (in fact we have to come back to see the marker again)
+			second_iteration = 1
+			print(str(avg))
+			
+		
+		#turn(-20, 2)
 		dist, rot_y = find_token()
 		#while dist < radius:
 		#	turn(5,1)
