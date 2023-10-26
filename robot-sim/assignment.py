@@ -21,8 +21,8 @@ token_array = []
 The first element will be the token put in the centre first, 
 that will be a reference for the other movements of the robot"""
 
-token_array_moved = []
-""" array with token offsets that were alredy moved in the arena"""
+total_counter = 0
+""" number of tokens moved by the robot"""
 
 radius = 0
 """ integer that will be modifed in the first iteration with the radius of the arena"""
@@ -60,7 +60,8 @@ def update_token_array(m):
     """
     global token_array
     if(m not in token_array):
-    	token_array.append(m)
+    	if(isinstance(m,int)):
+    		token_array.append(m)
     
 	
 	
@@ -216,6 +217,7 @@ def first_iteration():
 def main():
 	markers = R.see()
 	global token_array
+	global total_counter
 	istance = 0
 	while_condition = 0
 	second_iteration = 0
@@ -249,9 +251,9 @@ def main():
 	    	turn(30,1)
 	    while_condition = 1
 	    #	dist, rot_y = find_token_from_list(token_array)
-	    if dist==-1:
-		print("I don't see any token!!")
-		exit()  # if no markers are detected, the program ends
+	    if not R.see() and total_counter == len(token_array):
+		print("My work here is done!!")
+		exit()
 	    elif dist <d_th: 
 		print("Found it!")
 		R.grab() # if we are close to the token, we grab it.
@@ -262,19 +264,23 @@ def main():
 			istance = 1
 		else:
 			dist, rot_y = find_that_token(token_array[0])
-			trashold = 0.6
+			trashold = 0.55
 			while(dist > trashold):
 				drive(10,0.3)
 				dist, rot_y = find_that_token(token_array[0])
 				print(str(dist)+ " with token " +str(token_array[0]) )
 				
-		R.release()
+		if(R.release()):
+			R.release()
+			total_counter = total_counter + 1
+			print("counter" + str(total_counter))
 		drive(-20,1)
 		if(second_iteration == 1):
 			turn(-10,avg)
 			print(str(avg))
-			while(not R.see()):
+			while(not R.see() and total_counter != len(token_array)):
 				turn(10,0.2)
+				print("CONDITION"+str(total_counter)+ " " +str(len(token_array)))
 		if(second_iteration == 0):
 			start_time = time.time()
 			while(R.see() and second_iteration == 0):
