@@ -36,4 +36,69 @@ In the table that follow all the functions are grouped and explained:
 | find_that_token(m)| Checks all the token that the robot sees in its range of view. If it is present the token wanted, recognizable by the offset 'm' passed as an argument, it returns the distance and the angle. If the robot cannot se the token wanted, it turns on itself a little and repeats the operation. |
 | min_dist() | Compares the distance between the markers in the robot's range of view and returns the smallest distance and the index of the corresponding marker. |
 | max_dist() | Compares the distance between the markers in the robot's range of view and returns the biggest distance and the index of the corresponding marker. |
-| diam_dist() | Computes the maximum distance between all tokens and returns  |
+| diam_dist() | Computes the maximum distance between all tokens and returns it with the offset which correspond to it. The pseudocode follows to understand better how the function works. |
+| first_iteration() | Computes the centre of the arena and guides the robot there. It does not return anything, it is only needed to make the code more readable. The pseudocode for this function is presented later. |
+
+Pseudocode for diam_dist():
+```
+array_all_token = empty  
+array_dist = empty  
+global token_array
+first = True  
+temp = True  
+markers = markers that the robot sees  
+while (temp is True):  
+    turn(10,0.3)  
+    if (markers are different from the ones the root is seeing):  
+        markers = markers that the robot sees  
+        for (every markers m in the list of the ones the robot sees):  
+            if((the offset of m is present in 'array_all_token') and (first is True)):  
+                first = False  
+                dist, index = min_dist()  
+             if(the length of array_all_token is equal to the length of token_array):  
+                 temp = False
+             if(the offset of m is not present in 'array_all_token'):
+                 append to array_all_token the offset of m
+                 append to array_dist the distance of m
+                 update_token_array(offset of m)
+i = index of the maximum in array_dist
+return (maximum in array_dist), array_all_token[i] 
+```
+
+Pseudocode for first_iteration():
+```
+global first_iteration_condition
+while(first_iteration_condition is False):
+    dist, indexD = diam_dist()  
+    find_that_token(indexD)  
+    markers = markers that the robot sees
+    for (every markers m in the list of the ones the robot sees):
+        update_token_array(m)
+        if((distance of m) is between (dist - d_th) and (dist + d_th)):
+            rot_y = angle of m
+            while(rot_y is greater that -a_th):
+                if(rot_y is less than -a_th):
+                    turn(-2,0.5)
+                elif(rot_y is greater than a_th):
+                    turn(2,0.5)
+                dist, rot_y = find_that_token(offset of m)
+                if(rot_y is between -a_th and a_th):
+                    first_iteration_condition = True
+                    break
+global token_array
+dist_max = max_dist()
+dist_min = min_dist()
+diameter = dist_max[0]-dist_min[0]
+for (every i in range 0, (length of token_array - 1)):
+    if(token_array[i] is equal to dist_min[1]):
+        pop i element in token_array
+insert dist_min[1] in token_array in position 0
+global radius
+radius = diameter/2.0
+param = diameter
+while(param is greater than radius):
+    param, rot_y = find_that_token(indexD)
+    dist_min = min_dist()
+    param = param-dist_min[0]
+    drive(10,0.3)
+```
