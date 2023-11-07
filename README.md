@@ -24,6 +24,15 @@ The I drive forward until I have driven one radius length and I stop, realising 
 ### The other markers
 Once I have set the first token in the middle of the arena, I drive backwards a little to make sure to not hit the object just released and I make the robot turn until I do not see any token in the field of view. When this occurs, I can turn back for an instance to have in my visual range a token, that will be the one that I'll grab next. It is now possible to analize the distance and the angle of the marker with respect to the robot and now I can let the robot drive towards it.
 The robot when arrives at the destination grabs the token, and while it does not see the reference marker (the one put in the middle) it turns. Then it will drive towards it and when it arrives at a certain trashold it will stop, releasing the maker. 
+## Global variables in the code
+| Variable | Constant | Meaning |
+| -------- | -------- | -------- |
+| a_th | Yes | Float variable, it is the threshold for the control of the orientation. It is set to 2.0 |
+| d_th | Yes | Float variable, it is the threshold for the control of the linear distance. It is set to 0.4 |
+| first_iteration_condition | No | Condition for the first iteration to find the centre of the arena |
+| token_array | No | Array with token offsets. The first element will be the token put in the centre first, that will be a reference for the other movements of the robot |
+| total_counter | No | Number of tokens moved by the robot |
+| radius | No | Integer that will be modifed in the first iteration with the radius of the arena |
 ## Functions in the code
 There are several functions used in the script code, some of them are from the libraries of the robot while some others were written to ease off some operations and to make the code more readable and understandable.
 In the table that follow all the functions are grouped and explained:
@@ -39,7 +48,7 @@ In the table that follow all the functions are grouped and explained:
 | diam_dist() | Computes the maximum distance between all tokens and returns it with the offset which correspond to it. The pseudocode follows to understand better how the function works. |
 | first_iteration() | Computes the centre of the arena and guides the robot there. It does not return anything, it is only needed to make the code more readable. The pseudocode for this function is presented later. |
 
-Pseudocode for diam_dist():
+### Pseudocode for diam_dist():
 ```
 array_all_token = empty  
 array_dist = empty  
@@ -65,7 +74,7 @@ i = index of the maximum in array_dist
 return (maximum in array_dist), array_all_token[i] 
 ```
 
-Pseudocode for first_iteration():
+### Pseudocode for first_iteration():
 ```
 global first_iteration_condition
 while(first_iteration_condition is False):
@@ -102,3 +111,4 @@ while(param is greater than radius):
     param = param-dist_min[0]
     drive(10,0.3)
 ```
+## Pseudocode of the main function of the program
