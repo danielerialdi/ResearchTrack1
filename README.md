@@ -87,9 +87,9 @@ while(first_iteration_condition is False):
             rot_y = angle of m
             while(rot_y is greater that -a_th):
                 if(rot_y is less than -a_th):
-                    turn(-2,0.5)
+                    turn(-4,0.3)
                 elif(rot_y is greater than a_th):
-                    turn(2,0.5)
+                    turn(+4,0.3)
                 dist, rot_y = find_that_token(offset of m)
                 if(rot_y is between -a_th and a_th):
                     first_iteration_condition = True
@@ -109,6 +109,86 @@ while(param is greater than radius):
     param, rot_y = find_that_token(indexD)
     dist_min = min_dist()
     param = param-dist_min[0]
-    drive(10,0.3)
+    drive(20,0.1)
 ```
 ## Pseudocode of the main function of the program
+```
+markers = markers that the robot sees
+global token_array
+global total_counter
+instance = 0
+while_condition = 0
+second_iteration = 0
+avg = 0
+while True:
+    dist, rot_y = find_token()
+    # All this part is done to make the robot rotates on itself just at the beginning
+    while (R.see() returns something and while_condition is equal to 0):
+        marker = markers that the robot sees
+        for (every markers m in the list of the ones the robot sees):
+            if(offset of the marker m is not in token_array):
+                update_token_array(offset of the marker m)
+        turn(-10,1)
+    if(while_condition is equal to 0):
+        turn(10,1)
+    while(R.see() returns something and while_condition is equal to 0):
+        marker = markers that the robot sees
+		for (every markers m in the list of the ones the robot sees):
+			if(offset of the marker m is not in token_array):
+                update_token_array(offset of the marker m)
+        turn(10,1)
+    while((R.see() does not return anything) and while_condition is 0):
+        turn(30,1)
+    while_condition = 1
+    # End of the rotation on itself
+    if ((R.see() does not return anything) and total_counter has the same length of token_array):
+        print("My work here is done!!")
+		exit()
+    elif dist is less than d_th: 
+		print("Found it!")
+		R.grab() # if we are close to the token, we grab it.
+		# FIRST ITERATION ONLY:
+		global radius
+		if instance is 0:
+			first_iteration()
+			instance = 1
+        else:
+            dist, rot_y = find_that_token(first element of token_array)
+            threshold = 0.55
+			    while(dist is greater than threshold):
+				    drive(20,0.1)
+				    dist, rot_y = find_that_token(first element of token_array)
+        if(R.release() returns something):
+            R.release()
+            total_counter = total_counter + 1
+            print("counter" + str(total_counter))
+	    drive(-20,1)
+	    if(second_iteration is equal to 1):
+            turn(-10,avg)
+		    print(str(avg))
+		    while((R.see() does not return anything) and total_counter is different from the length of token_array):
+                turn(10,0.2)
+        if(second_iteration is equal to 0):
+		    start_time = take current time
+		    while(R.see() returns something and second_iteration is equal to 0):
+			    turn(-10,1)
+			    end_time = take current time
+			    turn(10,1)
+			    avg = end_time-start_time-0.3
+			    # This is the time spent in the while loop - a thrashold
+			    # This is done cause we have to not consider the check in the while but just the turning
+			    # Even if we assume a time = 0 to check the condition of the while loop, the time calculated
+			    # is given for going further (in fact we have to come back to see the marker again)
+			    second_iteration = 1
+			    print(str(avg))
+	    dist, rot_y = find_token()
+    elif rot_y is in between -a_th and a_th: # if the robot is well aligned with the token, we go forward
+		print("Ah, here we are!.")
+		drive(20, 0.1)
+	    elif rot_y is less than -a_th: # if the robot is not well aligned with the token, we move it on the left or on the right
+		print("Left a bit...")
+		turn(-4, 0.3)
+	    elif rot_y is greater than a_th:
+		print("Right a bit...")
+		turn(+4, 0.3)
+```
