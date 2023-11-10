@@ -158,6 +158,15 @@ while True:
 			    while(dist is greater than threshold):
 				    drive(20,0.1)
 				    dist, rot_y = find_that_token(first element of token_array)
+                                    if rot_y is in between -a_th and a_th: # if the robot is well aligned with the token, we go forward
+                                        print("Ah, here we are!.")
+		                        drive(20, 0.1)
+                                    elif rot_y is less than -a_th: # if the robot is not well aligned with the token, we move it on the left or on the right
+		                        print("Left a bit...")
+		                        turn(-4, 0.3)
+	                            elif rot_y is greater than a_th:
+		                        print("Right a bit...")
+		                        turn(+4, 0.3)
         if(R.release() returns something):
             R.release()
             total_counter = total_counter + 1
@@ -183,12 +192,12 @@ while True:
 			    print(str(avg))
 	    dist, rot_y = find_token()
     elif rot_y is in between -a_th and a_th: # if the robot is well aligned with the token, we go forward
-		print("Ah, here we are!.")
-		drive(20, 0.1)
-	    elif rot_y is less than -a_th: # if the robot is not well aligned with the token, we move it on the left or on the right
-		print("Left a bit...")
-		turn(-4, 0.3)
-	    elif rot_y is greater than a_th:
-		print("Right a bit...")
-		turn(+4, 0.3)
+        print("Ah, here we are!.")
+	drive(20, 0.1)
+    elif rot_y is less than -a_th: # if the robot is not well aligned with the token, we move it on the left or on the right
+	print("Left a bit...")
+	turn(-4, 0.3)
+    elif rot_y is greater than a_th:
+	print("Right a bit...")
+	turn(+4, 0.3)
 ```
