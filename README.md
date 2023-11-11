@@ -1,4 +1,5 @@
 # ResearchTrack1 - Assignment 1
+The code for this assignment can be found in the branch `assignment23`: https://github.com/danielerialdi/ResearchTrack1/tree/assignment23
 
 ## Table of contents
 
