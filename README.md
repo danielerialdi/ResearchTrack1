@@ -2,18 +2,18 @@
 
 ## Table of contents
 
-- [The objective of the assignment](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#the-objective-of-the-assignment)
-- [How to run the program](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#how-to-run-the-program)
-- [The assumptions](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#the-assumptions)
-- [Possible strategies](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#possible-strategies)
-- [How the script works](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#how-the-script-works)
-  - [The first step](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#The-first-step)
-  - [The other markers](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#The-other-markers)
-- [Global variables in the code](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#Global-variables-in-the-code)
-- [Functions in the code](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#Functions-in-the-code)
-  - [Pseudocode for diam_dist](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#Pseudocode-for-diam_dist)
-  - [Pseudocode for first_iteration](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#Pseudocode-for-first_iteration)
-- [Pseudocode of the main function of the program](https://github.com/danielerialdi/ResearchTrack1/edit/master/README.md#Pseudocode-of-the-main-function-of-the-program)
+- [The objective of the assignment](https://github.com/danielerialdi/ResearchTrack1/master/README.md#the-objective-of-the-assignment)
+- [How to run the program](https://github.com/danielerialdi/ResearchTrack1/master/README.md#how-to-run-the-program)
+- [The assumptions](https://github.com/danielerialdi/ResearchTrack1/master/README.md#the-assumptions)
+- [Possible strategies](https://github.com/danielerialdi/ResearchTrack1/master/README.md#possible-strategies)
+- [How the script works](https://github.com/danielerialdi/ResearchTrack1/master/README.md#how-the-script-works)
+  - [The first step](https://github.com/danielerialdi/ResearchTrack1/master/README.md#The-first-step)
+  - [The other markers](https://github.com/danielerialdi/ResearchTrack1/master/README.md#The-other-markers)
+- [Global variables in the code](https://github.com/danielerialdi/ResearchTrack1/master/README.md#Global-variables-in-the-code)
+- [Functions in the code](https://github.com/danielerialdi/ResearchTrack1/master/README.md#Functions-in-the-code)
+  - [Pseudocode for diam_dist](https://github.com/danielerialdi/ResearchTrack1/master/README.md#Pseudocode-for-diam_dist)
+  - [Pseudocode for first_iteration](https://github.com/danielerialdi/ResearchTrack1/master/README.md#Pseudocode-for-first_iteration)
+- [Pseudocode of the main function of the program](https://github.com/danielerialdi/ResearchTrack1/master/README.md#Pseudocode-of-the-main-function-of-the-program)
 
 
 ## The objective of the assignment
